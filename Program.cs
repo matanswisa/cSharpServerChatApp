@@ -15,6 +15,7 @@ namespace MultiServer
         private const int PORT = 8080; 
         private static readonly byte[] buffer = new byte[BUFFER_SIZE];
         private static int online = 0;
+        private const string ONLY_MESSAGE = "ONLY_MESSAGE:";
 
 
         static void Main()
@@ -119,11 +120,10 @@ namespace MultiServer
             string text = Encoding.ASCII.GetString(recBuf); //casting the bytes to a string
             Console.WriteLine("Received Text: " + text);
 
-            if (text.ToLower().Contains("get time")) // Client requested time
+            if (text.ToLower().Contains("get time") && text.Contains(ONLY_MESSAGE)) // Client requested time
             {
                 Console.WriteLine("Text is a get time request");
-                byte[] data = Encoding.ASCII.GetBytes(DateTime.Now.ToLongTimeString());
-                sentToAll(data.ToString());
+                sentToAll(ONLY_MESSAGE+ DateTime.Now.ToLongTimeString());
                 Console.WriteLine("Time sent to client is: " + DateTime.Now.ToLongTimeString());
             }
             else if (text.ToLower()=="exit") // Client wants to exit gracefully
